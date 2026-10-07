@@ -89,6 +89,25 @@ The workbook is deliberately "blind": it does **not** contain the true/original
 `product_sample_round{N}_answer_key.csv` (`ProductId, ProductSeries`), for scoring
 labeling accuracy after the fact without the answer being visible while labeling.
 
+## Team labeling results (Round 1)
+
+`data/team_labeling/` holds the actual filled-in Round 1 workbooks from the three
+labelers (Raghavendra, Teyyub, Noah) — not the blank template above, but what they
+produced: one sheet per labeler, each independently choosing `ProductSeries` (plus
+optional secondary categories and comments) for all 150 products.
+
+Two versions are kept, since the group revised labels substantially after discussing
+disagreements and ambiguous categories:
+
+- `round1_team_labeling_v1_initial.xlsx` — first-pass, independent labeling
+- `round1_team_labeling_v2_post_discussion.xlsx` — after group discussion; adds a
+  `Vertical?` flag column and an `AllCategories` sheet capturing category-overlap notes
+
+See **`data/team_labeling/NOTES.md`** for the full writeup: a before/after accuracy
+table per labeler, the specific category-overlap issues raised (e.g.
+`Web Tools & Plugins` vs. `IT Development/Infrastructure`, `Advertising` vs.
+`Marketing`), and what the new `Vertical?` flag is for.
+
 ## Folder structure
 
 ```
@@ -106,6 +125,10 @@ llm_product_categorization/
     │   ├── product_sample_round2.xlsx                # Round 2 labeling workbook: ProductSeries blank + dropdown
     │   ├── product_sample_round2_answer_key.csv      # Round 2: ProductId -> true ProductSeries
     │   └── product_sample_round2_manifest.json       # Round 2 sampling metadata (seed, method, excluded Round 1 IDs, 100 sampled ProductIds)
+    ├── team_labeling/
+    │   ├── round1_team_labeling_v1_initial.xlsx          # Raghavendra/Teyyub/Noah's first-pass labels, pre-discussion
+    │   ├── round1_team_labeling_v2_post_discussion.xlsx  # revised labels post-discussion + Vertical? flag + AllCategories notes
+    │   └── NOTES.md                                      # before/after accuracy comparison, category-overlap discussion writeup
     └── archive/
         ├── product_sample_100_draft_v1.csv          # superseded: first 100-product plain-random draft
         └── product_sample_100_draft_v1_manifest.json
