@@ -1,0 +1,101 @@
+Round,ProductId,VendorName,Product,ProductSeries
+2,342,AdptvInsght,AdptvInsghts,Enterprise Business Solution
+2,962,Aestiva,Aestiva,Other
+2,1011,CA,CA JCLCheck,IT Development/Infrastructure
+2,1273,CA,CA Client Automation,Servers
+2,1324,3M,3M Codefinder,Verticals
+2,1367,Smartsheet,Smartsheet,Collaborate Design & Publish
+2,1436,CS-Cart,Commerce Software,Retail & Digital Commerce
+2,1449,RedPrairie,CommercSuite,Retail & Digital Commerce
+2,1509,Adobe,Adobe Context Optional,Marketing
+2,1625,CAS,CRM,Sales
+2,1675,SIEBEL,CRM,Sales
+2,1726,CVISIONTech,CVISION,Collaborate Design & Publish
+2,1914,Percona,Percona,Data Management Business Intelligence & Analytics
+2,2242,Adobe,Adobe Discover,IT Security Information
+2,2412,IBM,IBM DS4800,Storage
+2,2431,Amazon,Amazon DynamoDB,Data Management Business Intelligence & Analytics
+2,2530,ThomsnRetrs,Eikon,Enterprise Business Solution
+2,2536,Ellucian,Ellucian Banner,Verticals
+2,2629,Symantec,Symantec Enterprise Vault,Storage
+2,3159,Technomedia,Technomedia,Human Capital Management
+2,3958,PHILIPS,Philips Intera,Verticals
+2,3980,Quest-sftwr,Quest InTrust,Security Devices
+2,4097,CoreLogic,CoreLogic Jenark,Verticals
+2,4191,LIMELIGHT,Limelight CDN,IT Development/Infrastructure
+2,4424,Exact,Macola,Enterprise Business Solution
+2,4693,VMware,VMware Mobile Virtualization Platform,IT Development/Infrastructure
+2,4777,DDOTS,DDOTS,Verticals
+2,4962,Adobe,Adobe Marketing Cloud,Marketing
+2,5071,Symantec,Symantec NetBackup PureDisk,Storage
+2,5100,IBM,IBM Tivoli Netcool/Impact,IT Development/Infrastructure
+2,5617,TIBCO,Tibco PortalBuilder,Collaborate Design & Publish
+2,5938,ProjtInsght,Project Insight,Collaborate Design & Publish
+2,5946,ThomsnRetrs,Thomson Reuters ProLaw,Verticals
+2,6259,IBM,IBM Rational Synergy,Operations
+2,6408,CERTEON,Certeon,Network Security Monitoring
+2,6572,Acquia,Acquia,IT Development/Infrastructure
+2,6655,Sage,Sage PFW ERP,Enterprise Business Solution
+2,7011,OvrlandStrg,Overland Storage SnapServer,Storage
+2,7065,Hitachi,Hitachi Software,IT Development/Infrastructure
+2,7206,Riverbed,stcntlnetsen,Network Security Monitoring
+2,7333,NETSUITE,SuiteFlex,Enterprise Business Solution
+2,7434,Enablon,Enablon,Financial Management & GRC
+2,7516,TOSHIBA,Toshiba Tablet,Hardware
+2,7669,BORLAND,TURBO-C++,IT Development/Infrastructure
+2,8024,McAfee,McAfee Vulnerability Manager,Security Devices
+2,8040,Avaya,Avaya Voice Portal,Communications
+2,8303,IBM,IBM WebSphere Voice Response for AIX,Customer Service
+2,8347,Dell EMC,Dell EMC XtremIO,Storage
+2,8458,PureStorage,FlashArray,Storage
+2,8568,SAP,SAP Business Communications Management,Marketing
+2,9278,Blue Coat Systems,PacketShaper,Network Security Monitoring
+2,9330,ServiceCEO,ServiceCEO,Service Management
+2,9355,Docker,Swarm,IT Development/Infrastructure
+2,9475,Alfresco,Alfresco Content Services,Collaborate Design & Publish
+2,9529,Apache-Soft,Apache Kylin,Data Management Business Intelligence & Analytics
+2,9541,Apache-Soft,Apache Storm,Data Management Business Intelligence & Analytics
+2,9682,Citrix,Citrix Web App Firewall (NetScaler AppFirewall),Security Devices
+2,9942,IBM,IBM Incentive Compensation Management,Sales
+2,10007,Jitterbit,Jitterbit Harmony Platform,Data Management Business Intelligence & Analytics
+2,10347,SAP,SAP Anywhere,Operations
+2,10458,iCIMS,TextRecruit,Human Capital Management
+2,10546,xTuple,xTuple,Enterprise Business Solution
+2,10613,Pennant Group Inc.,ThomasNet Web Traxs,Data Management Business Intelligence & Analytics
+2,10816,MessageGears LLC,MessageGears,Marketing
+2,11033,Nexcess.Net LLC,Nexcess,Collaborate Design & Publish
+2,11128,Thoughtleadr,Thoughtleadr,Advertising
+2,11246,Wider Planet Co. Ltd.,Wider Planet,Advertising
+2,11357,iDevDirect,iDevAffiliate,Advertising
+2,11560,Resumeware,ResumeWare,Human Capital Management
+2,11726,adacado inc.,Adacado,Marketing
+2,11980,Liveramp,Circulate,Advertising
+2,12178,Useriq Inc,UserIQ,Marketing
+2,12316,CommPartners,CommPartners NewsManager,Marketing
+2,12371,Peak Web Llc,Peak Hosting,Collaborate Design & Publish
+2,12434,Qubole,Qubole,Data Management Business Intelligence & Analytics
+2,12594,Jumpstart Automotive Media,Jumpstart,Verticals
+2,12607,Brainsonic,Sociabble,Marketing
+2,13301,Infopark,Infopark CMS Fiona,Web Tools & Plugins
+2,13497,TSheets.com LLC,TSheets,Human Capital Management
+2,13503,MoEngage Inc.,MoEngage,Marketing
+2,13621,MediaValet Inc.,MediaValet,Collaborate Design & Publish
+2,13751,Lycos Inc.,Tripod,Web Tools & Plugins
+2,13777,Faulkner Media Group Llc,FMG Suite,Marketing
+2,13842,mals-e.com,Mals eCommerce,Retail & Digital Commerce
+2,13854,ToolsGroup,ToolsGroup SO99+,Supply Chain Management
+2,13951,Zenclerk,ZenClerk,Marketing
+2,13994,Acumium,GravityMarket,Retail & Digital Commerce
+2,14195,ELEAD CRM,ELEAD1ONE Email Marketing,Verticals
+2,14301,Enzu Inc.,Enzu,Collaborate Design & Publish
+2,14533,AdStage Inc.,AdStage,Advertising
+2,14592,OneCommand,HigherGear,Verticals
+2,14616,Simplero,Simplero,Marketing
+2,14668,JobBoard.io,Jobboardio,Human Capital Management
+2,14737,GMO Internet Inc.,Onamaecom,Collaborate Design & Publish
+2,14797,Bluepay Processing LLC,BluePay,Retail & Digital Commerce
+2,15104,Monitor Backlinks Ltd.,Monitor Backlinks,Marketing
+2,15164,Payroll Center Inc,OnPay,Human Capital Management
+2,15645,GitHub,ReDoc,IT Development/Infrastructure
+2,15770,shopVOX,shopVOX,Operations
+2,15834,Adyoulike,Adyoulike Header Bidding,Advertising
