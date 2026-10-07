@@ -2,11 +2,19 @@
 Build an Excel labeling workbook from a product_sample_round{N}.csv:
 
   - ProductSeries column is blanked out and gets an Excel dropdown (data
-    validation list) of the 24 valid category values, so a human/LLM-assisted
+    validation list) of the valid category values, so a human/LLM-assisted
     labeler picks from a fixed list instead of typing free text.
   - The true (original) ProductSeries values are NOT included in the
     workbook -- they're written to a separate answer-key CSV for later
     scoring, so the labeling file stays "blind."
+
+By default the dropdown offers whatever ProductSeries values actually appear
+in that round's sample (the original 24-category scheme). ROUND_CATEGORY_OVERRIDES
+lets a specific round use a different, hand-specified category list instead --
+used for Round 2, which the team agreed on a slimmed-down 17-category list
+after discussing Round 1 (see README.md). This only changes what a labeler can
+*pick* for that round; it does not touch the answer key or how the round was
+sampled.
 
 Usage:
     py scripts/make_labeling_workbook.py
@@ -32,6 +40,35 @@ ANSWER_KEY_CSV = OUTPUT_DIR / f"product_sample_round{ROUND}_answer_key.csv"
 ID_COLUMN = "ProductId"
 CATEGORY_COLUMN = "ProductSeries"
 
+# Round-specific dropdown category list overrides. Round 2: the team's agreed,
+# post-Round-1-discussion list of 17 categories -- drops Advertising (folded
+# into Marketing), Network Security Monitoring (folded into IT Security
+# Information), Retail & Digital Commerce (folded into Sales), Web Tools &
+# Plugins (folded into IT Development/Infrastructure), Verticals (replaced by
+# the separate Vertical? flag used in team labeling), and Operations / Servers
+# (dropped, no specific merge target). See README.md "Round 2 category list".
+ROUND_CATEGORY_OVERRIDES = {
+    2: [
+        "Security Devices",
+        "Communications",
+        "IT Development/Infrastructure",
+        "Sales",
+        "Storage",
+        "Data Management Business Intelligence & Analytics",
+        "Customer Service",
+        "Enterprise Business Solution",
+        "Financial Management & GRC",
+        "Collaborate Design & Publish",
+        "Marketing",
+        "IT Security Information",
+        "Service Management",
+        "Human Capital Management",
+        "Hardware",
+        "Supply Chain Management",
+        "Other",
+    ],
+}
+
 LABELING_SHEET_NAME = "Labeling"
 CATEGORY_LIST_SHEET_NAME = "Category List"
 
@@ -45,7 +82,10 @@ def main() -> None:
     # Answer key: true category values, kept out of the labeling workbook.
     sample[[ID_COLUMN, CATEGORY_COLUMN]].to_csv(ANSWER_KEY_CSV, index=False)
 
-    categories = sorted(sample[CATEGORY_COLUMN].dropna().unique().tolist())
+    if ROUND in ROUND_CATEGORY_OVERRIDES:
+        categories = sorted(ROUND_CATEGORY_OVERRIDES[ROUND])
+    else:
+        categories = sorted(sample[CATEGORY_COLUMN].dropna().unique().tolist())
 
     labeling = sample.drop(columns=[CATEGORY_COLUMN]).copy()
     labeling[CATEGORY_COLUMN] = ""

@@ -76,13 +76,41 @@ Pooling both rounds: **250 distinct products**, all 24 `ProductSeries` categorie
 represented in each round individually (so either round can be used standalone, or
 both combined for a larger labeled set).
 
+## Round 2 category list: 17 categories, agreed after Round 1
+
+Sampling for Round 2 (above) still stratifies on the original 24-value `ProductSeries`
+field, since that's what's in the source data. But **what a labeler can actually pick
+from in Round 2's Excel dropdown is a different, slimmed-down list of 17 categories**
+— the team's agreed outcome after discussing Round 1's results and the category-overlap
+issues raised there (see `data/team_labeling/NOTES.md`). This is a Round 2 labeling-UI
+change only: Round 1's workbook, Round 2's sampling/coverage method, and both rounds'
+answer keys (which still record the true original `ProductSeries`) are untouched.
+
+**Round 2 dropdown — 17 categories kept:** Security Devices, Communications,
+IT Development/Infrastructure, Sales, Storage, Data Management Business Intelligence
+& Analytics, Customer Service, Enterprise Business Solution, Financial Management &
+GRC, Collaborate Design & Publish, Marketing, IT Security Information, Service
+Management, Human Capital Management, Hardware, Supply Chain Management, Other.
+
+**7 categories dropped:** Advertising (folded into Marketing), Network Security
+Monitoring (folded into IT Security Information), Retail & Digital Commerce (folded
+into Sales), Web Tools & Plugins (folded into IT Development/Infrastructure),
+Verticals (retired — replaced by the separate `Vertical?` flag introduced in team
+labeling v2), and Operations / Servers (dropped with no specific merge target — a
+Round-2 labeler who hits one of these products picks whichever of the 17 fits best).
+
+Implemented in `scripts/make_labeling_workbook.py` via `ROUND_CATEGORY_OVERRIDES`
+— a per-round dict that, when set, replaces the dropdown's category source with a
+hand-specified list instead of deriving it from that round's sampled `ProductSeries`
+values. Currently only Round 2 has an override.
+
 ## Labeling workbook (Excel dropdown)
 
 For each round, `product_sample_round{N}.xlsx` is the file to actually label in. Its
 `ProductSeries` column starts **blank** and is restricted to an Excel data-validation
-dropdown listing the 24 valid category values (sourced from a hidden `Category List`
-sheet) — so a labeler picks from a fixed list instead of typing free text, and Excel
-rejects anything that isn't one of the 24 values.
+dropdown (sourced from a hidden `Category List` sheet) — so a labeler picks from a
+fixed list instead of typing free text, and Excel rejects anything that isn't on the
+list (24 categories for Round 1, 17 for Round 2 — see above).
 
 The workbook is deliberately "blind": it does **not** contain the true/original
 `ProductSeries` for each product. Those live separately in
@@ -122,7 +150,7 @@ llm_product_categorization/
     │   ├── product_sample_round1_answer_key.csv      # Round 1: ProductId -> true ProductSeries
     │   ├── product_sample_round1_manifest.json       # Round 1 sampling metadata (seed, method, 150 sampled ProductIds)
     │   ├── product_sample_round2.csv                 # Round 2: 100 products, all 24 ProductSeries covered, true labels included
-    │   ├── product_sample_round2.xlsx                # Round 2 labeling workbook: ProductSeries blank + dropdown
+    │   ├── product_sample_round2.xlsx                # Round 2 labeling workbook: ProductSeries blank + dropdown (17-category list, post-Round-1 agreement)
     │   ├── product_sample_round2_answer_key.csv      # Round 2: ProductId -> true ProductSeries
     │   └── product_sample_round2_manifest.json       # Round 2 sampling metadata (seed, method, excluded Round 1 IDs, 100 sampled ProductIds)
     ├── team_labeling/
@@ -152,6 +180,9 @@ exactly. For a new round:
    category coverage or zero-overlap can't be guaranteed (e.g. if a category's remaining
    pool runs out, or `SAMPLE_SIZE` is smaller than the number of categories).
 4. Run `make_labeling_workbook.py` to produce that round's blind `.xlsx` + answer key.
+   If the round should use a different dropdown category list than its own sampled
+   `ProductSeries` values (as Round 2 does), add an entry to `ROUND_CATEGORY_OVERRIDES`
+   in that script.
 5. Document the new round in this README (seed, size, coverage, overlap check).
 
 ## Provenance
