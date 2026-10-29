@@ -37,7 +37,7 @@ SAMPLE_CSV = OUTPUT_DIR / f"product_sample_round{ROUND}.csv"
 WORKBOOK_XLSX = OUTPUT_DIR / f"product_sample_round{ROUND}.xlsx"
 ANSWER_KEY_CSV = OUTPUT_DIR / f"product_sample_round{ROUND}_answer_key.csv"
 GARTNER_KEY_CSV = OUTPUT_DIR / f"product_sample_round{ROUND}_gartner_key.csv"
-GARTNER_MATCH_CSV = PROJECT_ROOT / "data" / "gartner" / "gartner_swdb_matches.csv"
+GARTNER_EXACT_CSV = PROJECT_ROOT / "data" / "gartner" / "gartner_exact_matches.csv"
 
 ID_COLUMN = "ProductId"
 CATEGORY_COLUMN = "ProductSeries"
@@ -124,17 +124,15 @@ def main() -> None:
     # Answer key: true category values, kept out of the labeling workbook.
     sample[[ID_COLUMN, CATEGORY_COLUMN]].to_csv(ANSWER_KEY_CSV, index=False)
 
-    # Gartner key (rounds drawn from Gartner-matched products): matched Gartner
-    # product and its Gartner categories, kept out of the blind workbook like the answer key.
+    # Gartner answer key (rounds drawn from Gartner exact matches): the matched Gartner
+    # product and its Gartner categories -- primary = the Gartner market where the product
+    # has the most reviews; all markets listed too. Kept out of the blind workbook.
     gartner_written = False
-    if GARTNER_MATCH_CSV.exists():
-        gm = pd.read_csv(GARTNER_MATCH_CSV, dtype={ID_COLUMN: "Int64"})
-        gk = sample[[ID_COLUMN]].merge(gm, on=ID_COLUMN, how="left")
-        if gk["G_Product"].notna().all():
-            gk[[ID_COLUMN, "match_tier", "G_Vendor", "G_Product", "G_URL", "G_MainCategory", "G_Subcategory"]].rename(
-                columns={"G_Vendor": "GartnerVendor", "G_Product": "GartnerProduct", "G_URL": "GartnerURL",
-                         "G_MainCategory": "GartnerMainCategory", "G_Subcategory": "GartnerSubcategory"}
-            ).to_csv(GARTNER_KEY_CSV, index=False)
+    if GARTNER_EXACT_CSV.exists():
+        ge = pd.read_csv(GARTNER_EXACT_CSV, dtype={ID_COLUMN: "Int64"})
+        gk = sample[[ID_COLUMN]].merge(ge.drop(columns=["VendorName", "Product"]), on=ID_COLUMN, how="left")
+        if gk["GartnerProduct"].notna().all():
+            gk.to_csv(GARTNER_KEY_CSV, index=False)
             gartner_written = True
 
     if ROUND in ROUND_CATEGORY_OVERRIDES:

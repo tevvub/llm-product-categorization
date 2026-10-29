@@ -137,9 +137,21 @@ first (normalized names, Gartner "Parent (Subsidiary)" vendors, product-name bra
 that vendor. Tiers starting with `A` are high-confidence (`A1_exact`: 39/40 correct in a
 manual spot check); `B` tiers need review; `X` tiers have no product match.
 
-`data/output/product_sample_round3_gartner_key.csv` gives, for each Round 3 product,
-the matched Gartner product, URL and Gartner categories. Like the answer key, it is kept
-out of the blind labeling workbook.
+`data/gartner/gartner_exact_matches.csv` lists all **985** exact matches (one row per SWDB
+product) with SWDB `ProductSeries`/`ProductCategory` next to Gartner's categories. Gartner
+places many products in several markets, so each row gives:
+
+- `G_PrimaryMainCategory` / `G_PrimarySubcategory` — the Gartner market where the product
+  has the **most reviews** (ties: Active before Transitioning before Retired);
+- `G_AllMainCategories` / `G_AllSubcategories` — every Gartner market, ordered by review count.
+
+`data/gartner/gartner_exact_matches_long.csv` has the same data one row per
+product × Gartner market, with review counts.
+
+`data/output/product_sample_round3_gartner_key.csv` is the **Gartner answer key** for
+Round 3: the same columns for the 100 sampled products. Like the SWDB answer key, it is
+kept out of the blind labeling workbook. Gartner's categories use Gartner's own taxonomy
+(21 main categories, ~940 markets), not the 19-category dropdown.
 
 ## Round 3 category list: 19 categories, agreed after Round 2
 
@@ -212,10 +224,12 @@ llm_product_categorization/
     │   ├── product_sample_round3.csv                 # Round 3: 100 Gartner exact-match products, all 24 ProductSeries covered
     │   ├── product_sample_round3.xlsx                # Round 3 labeling workbook (19-category dropdown + Category Notes sheet)
     │   ├── product_sample_round3_answer_key.csv      # Round 3: ProductId -> true ProductSeries
-    │   ├── product_sample_round3_gartner_key.csv     # Round 3: ProductId -> matched Gartner product, URL, categories
+    │   ├── product_sample_round3_gartner_key.csv     # Round 3 Gartner answer key: Gartner product, URL, primary + all categories
     │   └── product_sample_round3_manifest.json       # Round 3 sampling metadata (incl. gartner_filter)
     ├── gartner/
-    │   └── gartner_swdb_matches.csv                  # all 10,380 SWDB products -> Gartner Peer Insights match + tier
+    │   ├── gartner_swdb_matches.csv                  # all 10,380 SWDB products -> Gartner Peer Insights match + tier
+    │   ├── gartner_exact_matches.csv                 # 985 exact matches: SWDB vs Gartner primary + all categories
+    │   └── gartner_exact_matches_long.csv            # same, one row per product x Gartner market
     ├── team_labeling/
     │   ├── round1_team_labeling_v1_initial.xlsx          # Raghavendra/Teyyub/Noah's first-pass labels, pre-discussion
     │   ├── round1_team_labeling_v2_post_discussion.xlsx  # revised labels post-discussion + Vertical? flag + AllCategories notes
