@@ -71,8 +71,9 @@ disjoint from Round 1.
 |-------|-----|------|---------------------|------------------------------|
 | 1     | 150 | 42   | 24 / 24             | n/a (first round)            |
 | 2     | 100 | 7    | 24 / 24             | 0                             |
+| 3     | 100 | 2026 | 24 / 24             | 0 (pool: Gartner exact matches) |
 
-Pooling both rounds: **250 distinct products**, all 24 `ProductSeries` categories
+Pooling Rounds 1–2: **250 distinct products** (350 with Round 3), all 24 `ProductSeries` categories
 represented in each round individually (so either round can be used standalone, or
 both combined for a larger labeled set).
 
@@ -103,6 +104,60 @@ Implemented in `scripts/make_labeling_workbook.py` via `ROUND_CATEGORY_OVERRIDES
 — a per-round dict that, when set, replaces the dropdown's category source with a
 hand-specified list instead of deriving it from that round's sampled `ProductSeries`
 values. Currently only Round 2 has an override.
+
+## Round 3 — 100 products, Gartner exact matches only, full category coverage
+
+Same method as Round 2, with one added filter: the candidate pool is restricted to
+products whose name matched a **Gartner Peer Insights** product exactly
+(`match_tier = A1_exact` in `data/gartner/gartner_swdb_matches.csv`). This gives every
+Round 3 product an external reference category (Gartner's) alongside the SWDB label.
+
+### Method
+
+1. Drop all Round 1 and Round 2 `ProductId`s (250) → 10,130 eligible products.
+2. Keep only exact Gartner matches → **957** eligible products (every one of the 24
+   `ProductSeries` still has at least 2; Hardware is the smallest with 2).
+3. Shuffle with a fixed seed; first product per `ProductSeries` for coverage, then fill
+   from the same shuffled order to 100 (24 coverage picks + 76 random picks).
+4. Sort by `ProductId`, tag `Round = 3`, assert zero overlap with earlier rounds.
+
+- Random seed: **2026**
+- Categories covered: **24 / 24** (verified)
+- Overlap with Rounds 1–2: **0** (verified, enforced by assertion)
+- Products: see `sampled_product_ids` in `data/output/product_sample_round3_manifest.json`;
+  the manifest's `gartner_filter` block records the match file and tier used.
+
+### Gartner match file
+
+`data/gartner/gartner_swdb_matches.csv` maps all 10,380 SWDB products to Gartner Peer
+Insights products (`match_tier`, `G_Vendor`, `G_Product`, `G_URL`, `G_MainCategory`,
+`G_Subcategory`). Produced by `scripts/gartner_swdb_match.py`, which resolves the vendor
+first (normalized names, Gartner "Parent (Subsidiary)" vendors, product-name brand,
+`cpe_vendor`, a hand-curated acquisitions table) and then matches product names within
+that vendor. Tiers starting with `A` are high-confidence (`A1_exact`: 39/40 correct in a
+manual spot check); `B` tiers need review; `X` tiers have no product match.
+
+`data/output/product_sample_round3_gartner_key.csv` gives, for each Round 3 product,
+the matched Gartner product, URL and Gartner categories. Like the answer key, it is kept
+out of the blind labeling workbook.
+
+## Round 3 category list: 19 categories, agreed after Round 2
+
+Round 2's 17-category dropdown with one rename and two additions
+(`ROUND_CATEGORY_OVERRIDES[3]` in `scripts/make_labeling_workbook.py`):
+
+- **Software Development** — new; split out of IT Development/Infrastructure for tools
+  used to build and test software (IDEs, languages, frameworks, testing, app platforms).
+- **IT Development/Infrastructure** — kept; now infrastructure and operations
+  (monitoring, DNS, CDN, containers, device management).
+- **Data Management Business Intelligence & Analytics → Data Intelligence and Analytics**
+- **Service Management** — unchanged name; clarified as software for service requests,
+  incidents, or documentation.
+- **Not able to find** — new; for products the labeler cannot identify.
+
+The Round 3 workbook adds a visible `Category Notes` sheet with these clarifications.
+`Other` and `Not able to find` are pinned to the bottom of the dropdown. The answer key
+still records the original SWDB `ProductSeries` (24-category scheme).
 
 ## Labeling workbook (Excel dropdown)
 
@@ -143,7 +198,8 @@ llm_product_categorization/
 ├── README.md
 ├── scripts/
 │   ├── sample_products.py                  # sampling script (source of truth for how each round was drawn)
-│   └── make_labeling_workbook.py           # builds the blind .xlsx dropdown workbook + answer key for a round
+│   ├── make_labeling_workbook.py           # builds the blind .xlsx dropdown workbook + answer key for a round
+│   └── gartner_swdb_match.py               # SWDB -> Gartner Peer Insights product matcher (produces data/gartner/)
 └── data/
     ├── output/
     │   ├── product_sample_round1.xlsx               # Round 1 labeling workbook: ProductSeries blank + dropdown
@@ -152,7 +208,14 @@ llm_product_categorization/
     │   ├── product_sample_round2.csv                 # Round 2: 100 products, all 24 ProductSeries covered, true labels included
     │   ├── product_sample_round2.xlsx                # Round 2 labeling workbook: ProductSeries blank + dropdown (17-category list, post-Round-1 agreement)
     │   ├── product_sample_round2_answer_key.csv      # Round 2: ProductId -> true ProductSeries
-    │   └── product_sample_round2_manifest.json       # Round 2 sampling metadata (seed, method, excluded Round 1 IDs, 100 sampled ProductIds)
+    │   ├── product_sample_round2_manifest.json       # Round 2 sampling metadata (seed, method, excluded Round 1 IDs, 100 sampled ProductIds)
+    │   ├── product_sample_round3.csv                 # Round 3: 100 Gartner exact-match products, all 24 ProductSeries covered
+    │   ├── product_sample_round3.xlsx                # Round 3 labeling workbook (19-category dropdown + Category Notes sheet)
+    │   ├── product_sample_round3_answer_key.csv      # Round 3: ProductId -> true ProductSeries
+    │   ├── product_sample_round3_gartner_key.csv     # Round 3: ProductId -> matched Gartner product, URL, categories
+    │   └── product_sample_round3_manifest.json       # Round 3 sampling metadata (incl. gartner_filter)
+    ├── gartner/
+    │   └── gartner_swdb_matches.csv                  # all 10,380 SWDB products -> Gartner Peer Insights match + tier
     ├── team_labeling/
     │   ├── round1_team_labeling_v1_initial.xlsx          # Raghavendra/Teyyub/Noah's first-pass labels, pre-discussion
     │   ├── round1_team_labeling_v2_post_discussion.xlsx  # revised labels post-discussion + Vertical? flag + AllCategories notes
@@ -170,8 +233,10 @@ py scripts\make_labeling_workbook.py      # build the .xlsx dropdown workbook + 
 ```
 
 Requires `pandas` and `openpyxl`. Both scripts' config block (`RANDOM_SEED`, `SAMPLE_SIZE`,
-`ROUND`) is currently set to Round 2 (100, seed 7); re-running as-is reproduces Round 2
-exactly. For a new round:
+`ROUND`) is currently set to Round 3 (100, seed 2026, Gartner exact matches only); re-running
+as-is reproduces Round 3 exactly. `sample_products.py` reads the master file from the
+`MASTER_DATA_CSV` environment variable if set, otherwise the OneDrive path above. Set
+`GARTNER_MATCH_CSV_NAME = None` to sample without the Gartner filter. For a new round:
 
 1. Bump `ROUND` (e.g. to `3`) and set `SAMPLE_SIZE` in both scripts.
 2. Pick a new `RANDOM_SEED` (any value not yet used for another round).
@@ -189,4 +254,5 @@ exactly. For a new round:
 
 - Round 1 generated: see `created_utc` in `data/output/product_sample_round1_manifest.json`
 - Round 2 generated: see `created_utc` in `data/output/product_sample_round2_manifest.json`
+- Round 3 generated: see `created_utc` in `data/output/product_sample_round3_manifest.json`
 - Generated by: teyyubteyyub.mt@gmail.com

@@ -29,13 +29,15 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
 # ---- Config -----------------------------------------------------------
-ROUND = 2
+ROUND = 3
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = PROJECT_ROOT / "data" / "output"
 SAMPLE_CSV = OUTPUT_DIR / f"product_sample_round{ROUND}.csv"
 WORKBOOK_XLSX = OUTPUT_DIR / f"product_sample_round{ROUND}.xlsx"
 ANSWER_KEY_CSV = OUTPUT_DIR / f"product_sample_round{ROUND}_answer_key.csv"
+GARTNER_KEY_CSV = OUTPUT_DIR / f"product_sample_round{ROUND}_gartner_key.csv"
+GARTNER_MATCH_CSV = PROJECT_ROOT / "data" / "gartner" / "gartner_swdb_matches.csv"
 
 ID_COLUMN = "ProductId"
 CATEGORY_COLUMN = "ProductSeries"
@@ -67,7 +69,47 @@ ROUND_CATEGORY_OVERRIDES = {
         "Supply Chain Management",
         "Other",
     ],
+    # Round 3: Round 2's 17 categories with one rename and two additions, agreed
+    # after Round 2 (see README.md "Round 3 category list").
+    3: [
+        "Security Devices",
+        "Communications",
+        "IT Development/Infrastructure",
+        "Software Development",                       # new: split out of IT Development/Infrastructure
+        "Sales",
+        "Storage",
+        "Data Intelligence and Analytics",            # was Data Management Business Intelligence & Analytics
+        "Customer Service",
+        "Enterprise Business Solution",
+        "Financial Management & GRC",
+        "Collaborate Design & Publish",
+        "Marketing",
+        "IT Security Information",
+        "Service Management",
+        "Human Capital Management",
+        "Hardware",
+        "Supply Chain Management",
+        "Other",
+        "Not able to find",                           # new: labeler could not identify the product
+    ],
 }
+
+# Categories pinned to the end of the dropdown instead of sorted alphabetically.
+PIN_LAST = ["Other", "Not able to find"]
+
+# Optional per-round guidance shown to labelers on a visible "Category Notes" sheet.
+ROUND_CATEGORY_NOTES = {
+    3: {
+        "Software Development": "New. Tools for building and testing software: IDEs, programming languages, "
+            "frameworks/libraries, testing & QA, low-code/app development platforms.",
+        "IT Development/Infrastructure": "IT infrastructure and operations: monitoring, DNS, CDN, containers, "
+            "device/mobility management. Software development tools now go to Software Development.",
+        "Data Intelligence and Analytics": "Renamed from Data Management Business Intelligence & Analytics.",
+        "Service Management": "Software for service requests, incidents, or documentation.",
+        "Not able to find": "Use when you cannot find enough information to identify what the product is.",
+    },
+}
+NOTES_SHEET_NAME = "Category Notes"
 
 LABELING_SHEET_NAME = "Labeling"
 CATEGORY_LIST_SHEET_NAME = "Category List"
@@ -82,8 +124,22 @@ def main() -> None:
     # Answer key: true category values, kept out of the labeling workbook.
     sample[[ID_COLUMN, CATEGORY_COLUMN]].to_csv(ANSWER_KEY_CSV, index=False)
 
+    # Gartner key (rounds drawn from Gartner-matched products): matched Gartner
+    # product and its Gartner categories, kept out of the blind workbook like the answer key.
+    gartner_written = False
+    if GARTNER_MATCH_CSV.exists():
+        gm = pd.read_csv(GARTNER_MATCH_CSV, dtype={ID_COLUMN: "Int64"})
+        gk = sample[[ID_COLUMN]].merge(gm, on=ID_COLUMN, how="left")
+        if gk["G_Product"].notna().all():
+            gk[[ID_COLUMN, "match_tier", "G_Vendor", "G_Product", "G_URL", "G_MainCategory", "G_Subcategory"]].rename(
+                columns={"G_Vendor": "GartnerVendor", "G_Product": "GartnerProduct", "G_URL": "GartnerURL",
+                         "G_MainCategory": "GartnerMainCategory", "G_Subcategory": "GartnerSubcategory"}
+            ).to_csv(GARTNER_KEY_CSV, index=False)
+            gartner_written = True
+
     if ROUND in ROUND_CATEGORY_OVERRIDES:
-        categories = sorted(ROUND_CATEGORY_OVERRIDES[ROUND])
+        categories = sorted(c for c in ROUND_CATEGORY_OVERRIDES[ROUND] if c not in PIN_LAST)
+        categories += [c for c in PIN_LAST if c in ROUND_CATEGORY_OVERRIDES[ROUND]]
     else:
         categories = sorted(sample[CATEGORY_COLUMN].dropna().unique().tolist())
 
@@ -109,9 +165,22 @@ def main() -> None:
 
     ws.freeze_panes = "A2"
 
-    widths = {"Round": 8, "ProductId": 12, "VendorName": 28, "Product": 40, "ProductSeries": 32}
+    widths = {"Round": 8, "ProductId": 12, "VendorName": 28, "Product": 40, "ProductSeries": 42}
     for col_idx, header in enumerate(headers, start=1):
         ws.column_dimensions[get_column_letter(col_idx)].width = widths.get(header, 20)
+
+    # ---- Category Notes sheet (visible guidance, optional) ----
+    notes = ROUND_CATEGORY_NOTES.get(ROUND)
+    if notes:
+        nws = wb.create_sheet(NOTES_SHEET_NAME)
+        nws.append(["Category", "Note"])
+        for c in nws[1]:
+            c.fill = HEADER_FILL
+            c.font = HEADER_FONT
+        for cat in categories:
+            nws.append([cat, notes.get(cat, "")])
+        nws.column_dimensions["A"].width = 42
+        nws.column_dimensions["B"].width = 100
 
     # ---- Category List sheet (dropdown source) ----
     cat_ws = wb.create_sheet(CATEGORY_LIST_SHEET_NAME)
@@ -119,7 +188,7 @@ def main() -> None:
     cat_ws.cell(row=1, column=1).font = Font(bold=True)
     for i, cat in enumerate(categories, start=2):
         cat_ws.cell(row=i, column=1, value=cat)
-    cat_ws.column_dimensions["A"].width = 32
+    cat_ws.column_dimensions["A"].width = 42
     cat_ws.sheet_state = "hidden"
 
     last_cat_row = len(categories) + 1
@@ -144,6 +213,8 @@ def main() -> None:
     print(f"Labeling workbook: {WORKBOOK_XLSX}")
     print(f"  {len(labeling)} rows, dropdown column '{CATEGORY_COLUMN}' ({len(categories)} options), starts blank")
     print(f"Answer key:        {ANSWER_KEY_CSV}")
+    if gartner_written:
+        print(f"Gartner key:       {GARTNER_KEY_CSV}")
 
 
 if __name__ == "__main__":

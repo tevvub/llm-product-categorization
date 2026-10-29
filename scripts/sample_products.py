@@ -26,22 +26,31 @@ Usage:
 """
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 
 # ---- Config -----------------------------------------------------------
-RANDOM_SEED = 7
+RANDOM_SEED = 2026
 SAMPLE_SIZE = 100
-ROUND = 2
+ROUND = 3
 
-SOURCE_CSV = Path(
-    r"C:\Users\mutal\OneDrive - University of Tulsa\NSF Proposal\data\output\Master_Data_2022_final.csv"
-)
+# Optional pool restriction by Gartner Peer Insights match tier (see data/gartner/).
+# Round 3: only products whose name matched a Gartner product exactly (tier A1_exact).
+# Set to None to sample from the full source file (Rounds 1-2 behaviour).
+GARTNER_MATCH_CSV_NAME = "gartner_swdb_matches.csv"
+GARTNER_ALLOWED_TIERS = {"A1_exact"}
+
+SOURCE_CSV = Path(os.environ.get(
+    "MASTER_DATA_CSV",
+    r"C:\Users\mutal\OneDrive - University of Tulsa\NSF Proposal\data\output\Master_Data_2022_final.csv",
+))
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = PROJECT_ROOT / "data" / "output"
+GARTNER_MATCH_CSV = (PROJECT_ROOT / "data" / "gartner" / GARTNER_MATCH_CSV_NAME) if GARTNER_MATCH_CSV_NAME else None
 SAMPLE_CSV = OUTPUT_DIR / f"product_sample_round{ROUND}.csv"
 MANIFEST_JSON = OUTPUT_DIR / f"product_sample_round{ROUND}_manifest.json"
 
@@ -73,6 +82,13 @@ def main() -> None:
     pool = df[~df[ID_COLUMN].isin(excluded_ids)].copy()
     print(f"Excluding {len(excluded_ids)} ProductIds already used in prior round(s): "
           f"{sorted(prior_rounds.keys())} -> pool of {len(pool)} remaining (of {len(df)} total).")
+    gartner_eligible = None
+    if GARTNER_MATCH_CSV is not None:
+        gm = pd.read_csv(GARTNER_MATCH_CSV, dtype={ID_COLUMN: "Int64"})
+        gartner_eligible = set(gm.loc[gm["match_tier"].isin(GARTNER_ALLOWED_TIERS), ID_COLUMN])
+        pool = pool[pool[ID_COLUMN].isin(gartner_eligible)].copy()
+        print(f"Gartner filter: keeping tiers {sorted(GARTNER_ALLOWED_TIERS)} -> pool of {len(pool)}.")
+
 
     total_categories = df[CATEGORY_COLUMN].nunique(dropna=True)
     pool_categories = pool[CATEGORY_COLUMN].nunique(dropna=True)
@@ -120,8 +136,13 @@ def main() -> None:
         "sample_size": int(len(sample)),
         "round": ROUND,
         "random_seed": RANDOM_SEED,
+        "gartner_filter": (None if GARTNER_MATCH_CSV is None else {
+            "match_file": str(GARTNER_MATCH_CSV.relative_to(PROJECT_ROOT)),
+            "allowed_tiers": sorted(GARTNER_ALLOWED_TIERS),
+            "eligible_after_exclusions": int(len(pool)),
+        }),
         "sampling_method": (
-            "Prior-round ProductIds excluded first; full shuffle with fixed seed over the "
+            "Prior-round ProductIds excluded first; optional Gartner match-tier filter; full shuffle with fixed seed over the "
             "remaining pool; first occurrence per ProductSeries taken to guarantee category "
             "coverage, then next rows in shuffle order fill the remainder to SAMPLE_SIZE."
         ),

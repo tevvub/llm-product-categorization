@@ -1,0 +1,101 @@
+Round,ProductId,VendorName,Product,ProductSeries
+3,780,Amazon,Amazon AWS CloudFormation,IT Development/Infrastructure
+3,847,i-nexus,i-nexus,Data Management Business Intelligence & Analytics
+3,857,SiSense,SiSense,Data Management Business Intelligence & Analytics
+3,860,Domo,Domo,Data Management Business Intelligence & Analytics
+3,935,BrowsrStack,BrowserStack,IT Development/Infrastructure
+3,949,SAP,SAP Business ByDesign,Enterprise Business Solution
+3,1298,Amazon,Amazon Cloudwatch,IT Development/Infrastructure
+3,1315,Hitachi,Hitachi Content Platform,Servers
+3,1326,Epic Sys,Epic Cogito,Verticals
+3,1420,Magento,Magento Commerce,Retail & Digital Commerce
+3,1535,DELTEK,Costpoint,Enterprise Business Solution
+3,1586,Sage,CRM,Sales
+3,1782,Dell EMC,Dell EMC Data Protection,Security Devices
+3,2357,SpringCM,SpringCM,Collaborate Design & Publish
+3,2513,Docebo,Docebo,Verticals
+3,2803,Adobe,Adobe Experience Manager,Web Tools & Plugins
+3,2826,DowJones,Factiva,Marketing
+3,3169,HireVue,HireVue,Human Capital Management
+3,3184,Lumesse,Lumesse,Human Capital Management
+3,3426,Cisco,Cisco Identity Services Engine,Security Devices
+3,3983,AUTODESK,Autodesk Inventor,Collaborate Design & Publish
+3,4039,FileWave,FileWave,IT Development/Infrastructure
+3,4211,SUSE,SUSE Linux Enterprise Server,Servers
+3,4416,Infor,Infor M3,Enterprise Business Solution
+3,4621,Aprimo,Aprimo,Marketing
+3,4882,Zabbix,Zabbix,IT Development/Infrastructure
+3,4892,Splunk,Splunk,IT Security Information
+3,5660,Cisco,Cisco Prime Infrastructure,Network Security Monitoring
+3,5849,Planisware,Planisware,Collaborate Design & Publish
+3,5957,Proprtyware,Propertyware,Verticals
+3,5959,Epicor,Epicor Prophet 21,Financial Management & GRC
+3,6335,RetailPro,Retail Pro,Retail & Digital Commerce
+3,6362,SAP,SAP Real Estate Management,Verticals
+3,6505,Brightcove,Brightcove,Collaborate Design & Publish
+3,6972,WindRiver,WindRiver,Hardware
+3,7054,CFEngine,CFEngine,Operations
+3,7272,CrashPlan,CrashPlan,Storage
+3,7639,PivotalLabs,Pivotal Tracker,Collaborate Design & Publish
+3,8053,HUAWEI,Huawei,Communications
+3,8061,pagerduty,PagerDuty,IT Development/Infrastructure
+3,8318,APPLE,xCode,IT Development/Infrastructure
+3,8376,zoho,Zoho CRM,Sales
+3,8552,Kenexa,IBM,Human Capital Management
+3,8668,CDNetworks Americas,CDNetworks,IT Development/Infrastructure
+3,8703,Dynamicweb,Dynamicweb,Web Tools & Plugins
+3,8770,Klaviyo,Klaviyo,Marketing
+3,8816,MouseFlow,MouseFlow,Data Management Business Intelligence & Analytics
+3,8958,Veritas,Veritas NetBackup,Storage
+3,9589,Avolution,ABACUS,Enterprise Business Solution
+3,9593,Amazon,AWS Lambda,Data Management Business Intelligence & Analytics
+3,9616,Bloomberg,Bloomberg Vault,Storage
+3,10088,Microsoft Corporation,Microsoft Azure Cosmos DB,Data Management Business Intelligence & Analytics
+3,10090,Microsoft Corporation,Microsoft Azure Data Lake Analytics,Data Management Business Intelligence & Analytics
+3,10118,Microsoft Corporation,Microsoft Project Server,Collaborate Design & Publish
+3,10123,Microsoft Corporation,Microsoft Team Foundation Server,Collaborate Design & Publish
+3,10126,Mitel,Mitel MiCollab,Collaborate Design & Publish
+3,10211,Oracle,Oracle Siebel Universal Customer Master,Marketing
+3,10252,Pegasystems Inc.,Pega Platform,IT Development/Infrastructure
+3,10308,RED-HAT,Red Hat JBoss Data Grid,Data Management Business Intelligence & Analytics
+3,10345,SAP,SAP,Other
+3,10572,zoho,Zoho Expense,Financial Management & GRC
+3,10723,Reply.io,Reply.io,Sales
+3,10897,MovingImage,movingimage,Collaborate Design & Publish
+3,10911,Rejoiner,Rejoiner,Retail & Digital Commerce
+3,10994,Virid Inc,Virid,Retail & Digital Commerce
+3,11393,OutSystems,OutSystems,IT Development/Infrastructure
+3,11404,Contentful GmbH,Contentful,Web Tools & Plugins
+3,11516,Jellyvision,ALEX,Human Capital Management
+3,11667,Refersion Inc,Refersion,Advertising
+3,11670,HappyFox Inc.,HappyFox,Customer Service
+3,11788,StackAdapt,StackAdapt,Advertising
+3,12074,ITS Software Systems Ltd,Eploy,Human Capital Management
+3,12544,Samsara,Samsara,Service Management
+3,12578,Oktopost,Oktopost,Marketing
+3,12730,Unilog Content Solutions,Unilog CIMM2,Retail & Digital Commerce
+3,12835,Infor,Infor,Other
+3,12974,Altify,Altify,Sales
+3,12977,Critical Mention,Critical Mention,Marketing
+3,13053,graylog,Graylog,IT Security Information
+3,13137,OneSignal Inc.,Onesignal,Web Tools & Plugins
+3,13589,NEOGOV Inc,NEOGOV Insight,Human Capital Management
+3,13888,Ascent360,Ascent360,Data Management Business Intelligence & Analytics
+3,14083,ClearSale LLC,Clearsale,Security Devices
+3,14126,Canva,Canva,Collaborate Design & Publish
+3,14281,L-soft,LISTSERV,Marketing
+3,14471,WiseTech Global,CargoWise,Supply Chain Management
+3,14647,TimeDoctor.com,Time Doctor,Human Capital Management
+3,14707,Asset Panda,Asset Panda,Financial Management & GRC
+3,14768,PracticePanther,PracticePanther,Verticals
+3,14957,TrenDemon,TrenDemon,Data Management Business Intelligence & Analytics
+3,15063,WeWork Companies Inc.,Conductor,Marketing
+3,15168,Plansource Holdings Inc,PlanSource,Human Capital Management
+3,15237,HashiCorp Inc.,HashiCorp Vault,Security Devices
+3,15362,adjust GmbH,Adjust,Data Management Business Intelligence & Analytics
+3,15485,Netlify,Netlify,IT Development/Infrastructure
+3,15542,Kajabi,Kajabi,Retail & Digital Commerce
+3,15660,Amazon,Amazon Connect,Customer Service
+3,15779,DELTEK,Deltek Maconomy,Enterprise Business Solution
+3,16091,Apache-Soft,Prometheus,Data Management Business Intelligence & Analytics
+3,16136,Infinidat Inc.,InfiniBox,Storage
